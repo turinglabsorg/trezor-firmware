@@ -5,10 +5,7 @@ from trezor.messages.TxInputType import TxInputType
 from trezor.messages.TxOutputBinType import TxOutputBinType
 from trezor.utils import HashWriter, ensure
 
-from apps.common.coininfo import CoinInfo
-from apps.wallet.sign_tx.multisig import multisig_get_pubkeys
-from apps.wallet.sign_tx.scripts import output_script_multisig, output_script_p2pkh
-from apps.wallet.sign_tx.writers import (
+from ..writers import (
     get_tx_hash,
     write_bytes,
     write_bytes_reversed,
@@ -17,6 +14,10 @@ from apps.wallet.sign_tx.writers import (
     write_uint64,
     write_varint,
 )
+from .multisig import multisig_get_pubkeys
+from .scripts import output_script_multisig, output_script_p2pkh
+
+from apps.common.coininfo import CoinInfo
 
 
 class Bip143Error(ValueError):

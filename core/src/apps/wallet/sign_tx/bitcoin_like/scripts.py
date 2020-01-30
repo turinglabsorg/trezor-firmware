@@ -1,9 +1,10 @@
 from trezor import utils
 from trezor.messages.MultisigRedeemScriptType import MultisigRedeemScriptType
 
+from .multisig import multisig_get_pubkey_count, multisig_get_pubkeys
+
 from apps.common.coininfo import CoinInfo
 from apps.common.writers import empty_bytearray
-from apps.wallet.sign_tx.multisig import multisig_get_pubkey_count, multisig_get_pubkeys
 from apps.wallet.sign_tx.writers import (
     write_bytes,
     write_op_push,

@@ -24,7 +24,8 @@ def split_op_return(data):
 async def confirm_output(ctx, output, coin):
     from trezor.ui.text import Text
     from apps.common.confirm import confirm
-    from apps.wallet.sign_tx import addresses, omni
+    from apps.wallet.sign_tx import addresses
+    from apps.wallet.sign_tx.bitcoin_like import omni  # TODO
 
     if output.script_type == OutputScriptType.PAYTOOPRETURN:
         data = output.op_return_data

@@ -8,9 +8,10 @@ from trezor.messages.TxInputType import TxInputType
 from trezor.messages.TxOutputBinType import TxOutputBinType
 from trezor.utils import HashWriter, ensure
 
+from .multisig import multisig_get_pubkeys
+from .scripts import output_script_multisig, output_script_p2pkh
+
 from apps.common.coininfo import CoinInfo
-from apps.wallet.sign_tx.multisig import multisig_get_pubkeys
-from apps.wallet.sign_tx.scripts import output_script_multisig, output_script_p2pkh
 from apps.wallet.sign_tx.writers import (
     get_tx_hash,
     write_bytes,

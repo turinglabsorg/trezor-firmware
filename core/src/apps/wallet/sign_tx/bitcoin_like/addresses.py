@@ -5,19 +5,14 @@ from trezor.crypto.hashlib import sha256
 from trezor.messages import FailureType, InputScriptType
 from trezor.utils import ensure
 
-from .bitcoin.multisig import multisig_get_pubkeys, multisig_pubkey_index
-from .bitcoin.scripts import (
-    output_script_multisig,
-    output_script_native_p2wpkh_or_p2wsh,
-)
+from .multisig import multisig_get_pubkeys, multisig_pubkey_index
+from .scripts import output_script_multisig, output_script_native_p2wpkh_or_p2wsh
 
 from apps.common import HARDENED, address_type, paths
 from apps.common.coininfo import CoinInfo
 
 if False:
     from typing import List
-
-# TODO: split this up as well
 
 # supported witness version for bech32 addresses
 _BECH32_WITVER = const(0x00)
