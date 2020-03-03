@@ -75,9 +75,7 @@ class TestMsgSigntxBitcoinGold:
                     proto.TxRequest(request_type=proto.RequestType.TXFINISHED),
                 ]
             )
-            _, serialized_tx = btc.sign_tx(
-                client, "Bgold", [inp1], [out1, out2]
-            )
+            _, serialized_tx = btc.sign_tx(client, "Bgold", [inp1], [out1, out2])
 
         assert (
             serialized_tx.hex()
@@ -141,9 +139,7 @@ class TestMsgSigntxBitcoinGold:
                     proto.TxRequest(request_type=proto.RequestType.TXFINISHED),
                 ]
             )
-            _, serialized_tx = btc.sign_tx(
-                client, "Bgold", [inp1, inp2], [out1]
-            )
+            _, serialized_tx = btc.sign_tx(client, "Bgold", [inp1, inp2], [out1])
 
         assert (
             serialized_tx.hex()
@@ -401,9 +397,7 @@ class TestMsgSigntxBitcoinGold:
                     proto.TxRequest(request_type=proto.RequestType.TXFINISHED),
                 ]
             )
-            _, serialized_tx = btc.sign_tx(
-                client, "Bgold", [inp1], [out1, out2]
-            )
+            _, serialized_tx = btc.sign_tx(client, "Bgold", [inp1], [out1, out2])
 
         assert (
             serialized_tx.hex()
@@ -466,9 +460,7 @@ class TestMsgSigntxBitcoinGold:
                     proto.TxRequest(request_type=proto.RequestType.TXFINISHED),
                 ]
             )
-            _, serialized_tx = btc.sign_tx(
-                client, "Bgold", [inp1], [out1, out2]
-            )
+            _, serialized_tx = btc.sign_tx(client, "Bgold", [inp1], [out1, out2])
 
         assert (
             serialized_tx.hex()
@@ -530,9 +522,7 @@ class TestMsgSigntxBitcoinGold:
                     proto.TxRequest(request_type=proto.RequestType.TXFINISHED),
                 ]
             )
-            signatures, _ = btc.sign_tx(
-                client, "Bgold", [inp1], [out1]
-            )
+            signatures, _ = btc.sign_tx(client, "Bgold", [inp1], [out1])
             # store signature
             inp1.multisig.signatures[0] = signatures[0]
             # sign with third key
@@ -564,9 +554,7 @@ class TestMsgSigntxBitcoinGold:
                     proto.TxRequest(request_type=proto.RequestType.TXFINISHED),
                 ]
             )
-            _, serialized_tx = btc.sign_tx(
-                client, "Bgold", [inp1], [out1]
-            )
+            _, serialized_tx = btc.sign_tx(client, "Bgold", [inp1], [out1])
 
         assert (
             serialized_tx.hex()
