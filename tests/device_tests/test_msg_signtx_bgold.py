@@ -19,10 +19,6 @@ import pytest
 from trezorlib import btc, messages as proto
 from trezorlib.tools import H_, CallException, parse_path
 
-from ..tx_cache import tx_cache
-
-TX_API = tx_cache("Bgold")
-
 
 # All data taken from T1
 @pytest.mark.altcoin
@@ -80,7 +76,7 @@ class TestMsgSigntxBitcoinGold:
                 ]
             )
             _, serialized_tx = btc.sign_tx(
-                client, "Bgold", [inp1], [out1, out2], prev_txes=TX_API
+                client, "Bgold", [inp1], [out1, out2]
             )
 
         assert (
@@ -146,7 +142,7 @@ class TestMsgSigntxBitcoinGold:
                 ]
             )
             _, serialized_tx = btc.sign_tx(
-                client, "Bgold", [inp1, inp2], [out1], prev_txes=TX_API
+                client, "Bgold", [inp1, inp2], [out1]
             )
 
         assert (
@@ -214,7 +210,7 @@ class TestMsgSigntxBitcoinGold:
                 ]
             )
             with pytest.raises(CallException):
-                btc.sign_tx(client, "Bgold", [inp1], [out1, out2], prev_txes=TX_API)
+                btc.sign_tx(client, "Bgold", [inp1], [out1, out2])
 
     @pytest.mark.multisig
     def test_send_btg_multisig_change(self, client):
@@ -283,7 +279,7 @@ class TestMsgSigntxBitcoinGold:
                 ]
             )
             signatures, serialized_tx = btc.sign_tx(
-                client, "Bgold", [inp1], [out1, out2], prev_txes=TX_API
+                client, "Bgold", [inp1], [out1, out2]
             )
 
         assert (
@@ -336,7 +332,7 @@ class TestMsgSigntxBitcoinGold:
                 ]
             )
             signatures, serialized_tx = btc.sign_tx(
-                client, "Bgold", [inp1], [out1, out2], prev_txes=TX_API
+                client, "Bgold", [inp1], [out1, out2]
             )
 
         assert (
@@ -406,7 +402,7 @@ class TestMsgSigntxBitcoinGold:
                 ]
             )
             _, serialized_tx = btc.sign_tx(
-                client, "Bgold", [inp1], [out1, out2], prev_txes=TX_API
+                client, "Bgold", [inp1], [out1, out2]
             )
 
         assert (
@@ -471,7 +467,7 @@ class TestMsgSigntxBitcoinGold:
                 ]
             )
             _, serialized_tx = btc.sign_tx(
-                client, "Bgold", [inp1], [out1, out2], prev_txes=TX_API
+                client, "Bgold", [inp1], [out1, out2]
             )
 
         assert (
@@ -535,7 +531,7 @@ class TestMsgSigntxBitcoinGold:
                 ]
             )
             signatures, _ = btc.sign_tx(
-                client, "Bgold", [inp1], [out1], prev_txes=TX_API
+                client, "Bgold", [inp1], [out1]
             )
             # store signature
             inp1.multisig.signatures[0] = signatures[0]
@@ -569,7 +565,7 @@ class TestMsgSigntxBitcoinGold:
                 ]
             )
             _, serialized_tx = btc.sign_tx(
-                client, "Bgold", [inp1], [out1], prev_txes=TX_API
+                client, "Bgold", [inp1], [out1]
             )
 
         assert (

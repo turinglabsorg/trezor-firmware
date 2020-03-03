@@ -19,10 +19,6 @@ import pytest
 from trezorlib import btc, messages as proto
 from trezorlib.tools import H_, CallException, parse_path
 
-from ..tx_cache import tx_cache
-
-TX_API = tx_cache("Bcash")
-
 
 @pytest.mark.altcoin
 class TestMsgSigntxBch:
@@ -79,9 +75,7 @@ class TestMsgSigntxBch:
                     proto.TxRequest(request_type=proto.RequestType.TXFINISHED),
                 ]
             )
-            _, serialized_tx = btc.sign_tx(
-                client, "Bcash", [inp1], [out1, out2], prev_txes=TX_API
-            )
+            _, serialized_tx = btc.sign_tx(client, "Bcash", [inp1], [out1, out2])
 
         assert (
             serialized_tx.hex()
@@ -146,9 +140,7 @@ class TestMsgSigntxBch:
                     proto.TxRequest(request_type=proto.RequestType.TXFINISHED),
                 ]
             )
-            _, serialized_tx = btc.sign_tx(
-                client, "Bcash", [inp1, inp2], [out1], prev_txes=TX_API
-            )
+            _, serialized_tx = btc.sign_tx(client, "Bcash", [inp1, inp2], [out1])
 
         assert (
             serialized_tx.hex()
@@ -213,9 +205,7 @@ class TestMsgSigntxBch:
                     proto.TxRequest(request_type=proto.RequestType.TXFINISHED),
                 ]
             )
-            _, serialized_tx = btc.sign_tx(
-                client, "Bcash", [inp1, inp2], [out1], prev_txes=TX_API
-            )
+            _, serialized_tx = btc.sign_tx(client, "Bcash", [inp1, inp2], [out1])
 
         assert (
             serialized_tx.hex()
@@ -282,7 +272,7 @@ class TestMsgSigntxBch:
                     proto.TxRequest(request_type=proto.RequestType.TXFINISHED),
                 ]
             )
-            btc.sign_tx(client, "Bcash", [inp1, inp2], [out1], prev_txes=TX_API)
+            btc.sign_tx(client, "Bcash", [inp1, inp2], [out1])
 
         run_attack = True
 
@@ -330,7 +320,7 @@ class TestMsgSigntxBch:
             )
 
             with pytest.raises(CallException) as exc:
-                btc.sign_tx(client, "Bcash", [inp1, inp2], [out1], prev_txes=TX_API)
+                btc.sign_tx(client, "Bcash", [inp1, inp2], [out1])
 
             assert exc.value.args[0] in (
                 proto.FailureType.ProcessError,
@@ -399,7 +389,7 @@ class TestMsgSigntxBch:
                 ]
             )
             with pytest.raises(CallException):
-                btc.sign_tx(client, "Bcash", [inp1], [out1, out2], prev_txes=TX_API)
+                btc.sign_tx(client, "Bcash", [inp1], [out1, out2])
 
     @pytest.mark.multisig
     def test_send_bch_multisig_wrongchange(self, client):
@@ -476,9 +466,7 @@ class TestMsgSigntxBch:
                     proto.TxRequest(request_type=proto.RequestType.TXFINISHED),
                 ]
             )
-            (signatures1, serialized_tx) = btc.sign_tx(
-                client, "Bcash", [inp1], [out1], prev_txes=TX_API
-            )
+            (signatures1, serialized_tx) = btc.sign_tx(client, "Bcash", [inp1], [out1])
         assert (
             signatures1[0].hex()
             == "304402201badcdcafef4855ed58621f95935efcbc72068510472140f4ec5e252faa0af93022003310a43488288f70aedee96a5af2643a255268a6858cda9ae3001ea5e3c7557"
@@ -554,7 +542,7 @@ class TestMsgSigntxBch:
                 ]
             )
             (signatures1, serialized_tx) = btc.sign_tx(
-                client, "Bcash", [inp1], [out1, out2], prev_txes=TX_API
+                client, "Bcash", [inp1], [out1, out2]
             )
 
         assert (
@@ -608,7 +596,7 @@ class TestMsgSigntxBch:
                 ]
             )
             (signatures1, serialized_tx) = btc.sign_tx(
-                client, "Bcash", [inp1], [out1, out2], prev_txes=TX_API
+                client, "Bcash", [inp1], [out1, out2]
             )
 
         assert (

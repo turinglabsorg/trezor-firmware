@@ -19,11 +19,6 @@ import pytest
 from trezorlib import btc, messages as proto
 from trezorlib.tools import parse_path
 
-from ..tx_cache import tx_cache
-
-# KMD has no usable backends, use cached TX only
-TX_API = tx_cache("Komodo", allow_fetch=False)
-
 TXHASH_2807c = bytes.fromhex(
     "2807c5b126ec8e2b078cab0f12e4c8b4ce1d7724905f8ebef8dca26b0c8e0f1d"
 )
@@ -91,7 +86,7 @@ class TestMsgSigntxKomodo:
                 lock_time=0x5D2A30B8,
             )
             _, serialized_tx = btc.sign_tx(
-                client, "Komodo", [inp1], [out1], details=details, prev_txes=TX_API
+                client, "Komodo", [inp1], [out1], details=details
             )
 
         # Accepted by network: tx 7b28bd91119e9776f0d4ebd80e570165818a829bbf4477cd1afe5149dbcd34b1
@@ -171,12 +166,7 @@ class TestMsgSigntxKomodo:
                 lock_time=0x5D2AF1F2,
             )
             _, serialized_tx = btc.sign_tx(
-                client,
-                "Komodo",
-                [inp1],
-                [out1, out2],
-                details=details,
-                prev_txes=TX_API,
+                client, "Komodo", [inp1], [out1, out2], details=details
             )
 
         # Accepted by network: tx c775678ceb18277729b427c7acf2f8ce63ac02fc2366f47ce08a3f443ff0e059

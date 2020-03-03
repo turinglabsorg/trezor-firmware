@@ -19,10 +19,6 @@ import pytest
 from trezorlib import btc, messages as proto
 from trezorlib.tools import parse_path
 
-from ..tx_cache import tx_cache
-
-TX_API = tx_cache("Zcash Testnet")
-
 TXHASH_aaf51e = bytes.fromhex(
     "aaf51e4606c264e47e5c42c958fe4cf1539c5172684721e38e69f4ef634d75dc"
 )
@@ -85,12 +81,7 @@ class TestMsgSigntxZcash:
                 branch_id=0x5BA81B19,
             )
             _, serialized_tx = btc.sign_tx(
-                client,
-                "Zcash Testnet",
-                [inp1],
-                [out1],
-                details=details,
-                prev_txes=TX_API,
+                client, "Zcash Testnet", [inp1], [out1], details=details
             )
 
         # Accepted by network: tx eda9b772c47f0c29310759960e0081c98707aa67a0a2738bcc71439fcf360675
@@ -150,12 +141,7 @@ class TestMsgSigntxZcash:
                 branch_id=0x76B809BB,
             )
             _, serialized_tx = btc.sign_tx(
-                client,
-                "Zcash Testnet",
-                [inp1],
-                [out1],
-                details=details,
-                prev_txes=TX_API,
+                client, "Zcash Testnet", [inp1], [out1], details=details
             )
 
         # Accepted by network: tx 0cef132c1d6d67f11cfa48f7fca3209da29cf872ac782354bedb686e61a17a78
