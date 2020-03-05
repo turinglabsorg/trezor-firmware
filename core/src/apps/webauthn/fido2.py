@@ -171,7 +171,6 @@ _BOGUS_APPID_CHROME = b"A" * 32
 _BOGUS_APPID_FIREFOX = b"\0" * 32
 _BOGUS_APPIDS = (_BOGUS_APPID_CHROME, _BOGUS_APPID_FIREFOX)
 _AAGUID = b"\xd6\xd0\xbd\xc3b\xee\xc4\xdb\xde\x8dzenJD\x87"  # First 16 bytes of SHA-256("TREZOR 2")
-_BOGUS_PRIV_KEY = b"\xAA" * 32
 
 # authentication control byte
 _AUTH_ENFORCE = const(0x03)  # enforce user presence and sign
@@ -1712,10 +1711,11 @@ def cbor_get_assertion_sign(
     )
 
     # Sign the authenticator data and the client data hash.
-    sig = cred.sign((authenticator_data, client_data_hash))
-    if not user_presence:
+    if user_presence:
+        sig = cred.sign((authenticator_data, client_data_hash))
+    else:
         # Spec deviation: Use a bogus signature during silent authentication.
-        sig = len(sig) * b"\xAA"
+        sig = cred.bogus_signature()
 
     # Encode the authenticatorGetAssertion response data.
     response = {

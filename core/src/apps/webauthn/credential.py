@@ -61,7 +61,20 @@ class Credential:
     def public_key(self) -> bytes:
         raise NotImplementedError
 
+    def _private_key(self) -> bytes:
+        raise NotImplementedError
+
     def sign(self, data: Iterable[bytes]) -> bytes:
+        raise NotImplementedError
+
+    def _u2f_sign(self, data: Iterable[bytes]) -> bytes:
+        dig = hashlib.sha256()
+        for segment in data:
+            dig.update(segment)
+        sig = nist256p1.sign(self._private_key(), dig.digest(), False)
+        return der.encode_seq((sig[1:33], sig[33:]))
+
+    def bogus_signature(self) -> bytes:
         raise NotImplementedError
 
     def hmac_secret_key(self) -> Optional[bytes]:
@@ -101,6 +114,9 @@ class Fido2Credential(Credential):
 
     def generate_id(self) -> None:
         self.creation_time = storage.device.next_u2f_counter() or 0
+
+        if not self.check_required_fields():
+            raise AssertionError
 
         data = {
             key: value
@@ -227,7 +243,7 @@ class Fido2Credential(Credential):
         else:
             return None
 
-    def private_key(self) -> bytes:
+    def _private_key(self) -> bytes:
         path = [HARDENED | 10022, HARDENED | int.from_bytes(self.id[:4], "big")] + [
             HARDENED | i for i in ustruct.unpack(">4L", self.id[-16:])
         ]
@@ -236,7 +252,7 @@ class Fido2Credential(Credential):
 
     def public_key(self) -> bytes:
         if self.curve == common.COSE_CURVE_P256:
-            pubkey = nist256p1.publickey(self.private_key(), False)
+            pubkey = nist256p1.publickey(self._private_key(), False)
             return cbor.encode(
                 {
                     common.COSE_KEY_ALG: self.algorithm,
@@ -247,7 +263,7 @@ class Fido2Credential(Credential):
                 }
             )
         elif self.curve == common.COSE_CURVE_ED25519:
-            pubkey = ed25519.publickey(self.private_key())
+            pubkey = ed25519.publickey(self._private_key())
             return cbor.encode(
                 {
                     common.COSE_KEY_ALG: self.algorithm,
@@ -263,18 +279,28 @@ class Fido2Credential(Credential):
             common.COSE_ALG_ES256,
             common.COSE_CURVE_P256,
         ):
-            dig = hashlib.sha256()
-            for segment in data:
-                dig.update(segment)
-            sig = nist256p1.sign(self.private_key(), dig.digest(), False)
-            return der.encode_seq((sig[1:33], sig[33:]))
+            return self._u2f_sign(data)
         elif (self.algorithm, self.curve) == (
             common.COSE_ALG_EDDSA,
             common.COSE_CURVE_ED25519,
         ):
             return ed25519.sign(
-                self.private_key(), b"".join(bytes(segment) for segment in data)
+                self._private_key(), b"".join(bytes(segment) for segment in data)
             )
+
+        raise TypeError
+
+    def bogus_signature(self) -> bytes:
+        if (self.algorithm, self.curve) == (
+            common.COSE_ALG_ES256,
+            common.COSE_CURVE_P256,
+        ):
+            return der.encode_seq((b"\x0a" * 32, b"\x0a" * 32))
+        elif (self.algorithm, self.curve) == (
+            common.COSE_ALG_EDDSA,
+            common.COSE_CURVE_ED25519,
+        ):
+            return b"\x0a" * 64
 
         raise TypeError
 
@@ -309,20 +335,19 @@ class U2fCredential(Credential):
         # Sort U2F credentials lexicographically amongst each other.
         return self.id < other.id
 
-    def private_key(self) -> bytes:
+    def _private_key(self) -> bytes:
         if self.node is None:
             return b""
         return self.node.private_key()
 
     def public_key(self) -> bytes:
-        return nist256p1.publickey(self.private_key(), False)
+        return nist256p1.publickey(self._private_key(), False)
 
     def sign(self, data: Iterable[bytes]) -> bytes:
-        dig = hashlib.sha256()
-        for segment in data:
-            dig.update(segment)
-        sig = nist256p1.sign(self.private_key(), dig.digest(), False)
-        return der.encode_seq((sig[1:33], sig[33:]))
+        return self._u2f_sign(data)
+
+    def bogus_signature(self) -> bytes:
+        return der.encode_seq((b"\x0a" * 32, b"\x0a" * 32))
 
     def generate_key_handle(self) -> None:
         # derivation path is m/U2F'/r'/r'/r'/r'/r'/r'/r'/r'
