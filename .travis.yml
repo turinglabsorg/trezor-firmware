@@ -34,7 +34,7 @@ script:
     - pipenv run make defs_check
     - pipenv run make gen_check
     # check if commit message contains a fixup commit
-    - messages=`git log --format=%s origin/master..` && [[ $messages != *"fixup!"* ]]
+    - messages=`git log --format=%s master..` && [[ $messages != *"fixup!"* ]]
 
 notifications:
     webhooks:
