@@ -13,7 +13,7 @@ IMAGE=trezor-firmware-build.$TOOLCHAIN_FLAVOR
 TAG=${1:-master}
 REPOSITORY=${2:-local}
 PRODUCTION=${PRODUCTION:-1}
-MEMORY_PROTECT=${MEMORY_PROTECT:-1}
+MEMORY_PROTECT=0
 
 if [ "$REPOSITORY" = "local" ]; then
   REPOSITORY=file:///local/
